@@ -12,7 +12,6 @@ echo
 PASSWORD="my_password"
 echo "Calling /hash Endpoint:"
 curl -X POST "$BASE_URL/hash?password=$PASSWORD"
-curl -X POST "$BASE_URL/hash?password=$PASSWORD"
 echo
 
 # Hash same password
@@ -44,4 +43,23 @@ echo
 # Login fail
 echo "Calling /login Endpoint:"
 curl -X GET "$BASE_URL/login?email=$EMAIL&password=asdasd"
+echo
+
+# Hmac add
+echo "Calling /hmac Endpoint:"
+curl -X POST "$BASE_URL/hmac?message=123"
+curl -X POST "$BASE_URL/hmac?message=321"
+curl -X POST "$BASE_URL/hmac?message=Moikkeliskoikkelis"
+echo
+# Hmac get all
+echo "Calling /gethmac Endpoint:"
+curl -X GET "$BASE_URL/gethmac"
+echo
+# Hmac check true
+echo "Calling /checkhmac Endpoint:"
+curl -X GET "$BASE_URL/checkhmac?message=123"
+echo
+# Hmac check false
+echo "Calling /checkhmac Endpoint:"
+curl -X GET "$BASE_URL/checkhmac?message=asdasd"
 echo

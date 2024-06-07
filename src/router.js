@@ -1,11 +1,19 @@
 const express = require('express')
 const {checkPass, storePass, getPasses} = require('./hash')
-const {signup, login} = require('./salt')
+const {signup, login} = require('./salt');
+const { addHmac, getHmacs, checkHmac } = require('./hmac');
 const router = express.Router();
 
-function errCaught(res, err, msg){
+function errCaught(res, err){
     console.error(err);
-    res.status(500).json({message: `Uuups ${msg} doesn't work`});
+    switch(err.code){
+        case 'ERR_INVALID_ARG_TYPE':
+            res.status(500).json({message: `Uuups ${res.req.url} recieved something unexpected`});
+            break;
+        default:
+            res.status(500).json({message: `Uuups ${res.req.url} something went wrong`});
+            break;
+    }
 }
 
 function respond(res, status, response){
@@ -44,7 +52,7 @@ router.post('/hash', (req, res) =>{
         }
         respond(res, status, response);
     } catch (error) {
-        errCaught(res, error, req.url);
+        errCaught(res, error);
     }
 })
 
@@ -54,7 +62,7 @@ router.get('/getAllPasses', (req, res) => {
         [status, response] = [200, getPasses()];
         respond(res, status, response);
     } catch (error) {
-        errCaught(res, error, req.url);
+        errCaught(res, error);
     }
 })
 
@@ -68,7 +76,7 @@ router.get('/hashLogin', (req, res) =>{
         }
         respond(res, status, response);
     } catch (error) {
-        errCaught(res, error, req.url);
+        errCaught(res, error);
     }
 })
 //#endregion HASH
@@ -85,7 +93,7 @@ router.post('/signup', (req, res) => {
         [status, response] = [200, {message: user}];
         respond(res, status, response);
     } catch (error) {
-        errCaught(res, error, req.url);
+        errCaught(res, error);
     }
 })
 
@@ -99,8 +107,39 @@ router.get('/login', (req, res) => {
         [status, response] = [200, {message: `Logged in ${login(email, pass)}`}];
         respond(res, status, response);
     } catch (error) {
-        errCaught(res, error, req.url);
+        errCaught(res, error);
     }
 })
 //#endregion SALT
+//#region HMAC
+router.post('/hmac', (req, res) => {
+    const msg = req.query.message;
+    let [status, response] = [200, {}];
+    try {
+        [status, response] = [200, {message: `Message added ${addHmac(msg)}`}];
+        respond(res, status, response);
+    } catch (error) {
+        errCaught(res, error)
+    }
+})
+router.get('/getHmac', (req, res) => {
+    let [status, response] = [200, {}];
+    try {
+        [status, response] = [200, {hmacs: getHmacs()}];
+        respond(res, status, response);
+    } catch (error) {
+        errCaught(res, error)
+    }
+})
+router.get('/checkHmac', (req, res) => {
+    let [status, response] = [200, {}];
+    const msg = req.query.message;
+    try {
+        [status, response] = [200, {message: `Message found ${checkHmac(msg)}`}];
+        respond(res, status, response);
+    } catch (error) {
+        errCaught(res, error)
+    }
+})
+//#endregion HMAC
 module.exports = router
