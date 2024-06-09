@@ -5,6 +5,8 @@ const { addHmac, getHmacs, checkHmac } = require('../crypto/hmac');
 const router = express.Router();
 
 function errCaught(res, err){
+    console.log(res.body)
+    console.log(res.req.query)
     console.error(err);
     switch(err.code){
         case 'ERR_INVALID_ARG_TYPE':
@@ -82,8 +84,8 @@ router.get('/hashLogin', (req, res) =>{
 //#endregion HASH
 
 //#region SALT
-router.post('/signup', (req, res) => {
-    const [pass, email] = [req.query.password, req.query.email];
+router.post('/signup', express.urlencoded({ extended: true }), (req, res) => {
+    const [pass, email ]= [req.body.password, req.body.email];
     let [status, response] = [200, {}];
     if(isEmptyString(email) || isEmptyString(pass)){
         [status, response] = [406, {message: "Neither password word nor email can be empty"}];
