@@ -1,7 +1,7 @@
 const express = require('express')
-const {checkPass, storePass, getPasses} = require('./hash')
-const {signup, login} = require('./salt');
-const { addHmac, getHmacs, checkHmac } = require('./hmac');
+const {checkPass, storePass, getPasses} = require('../crypto/hash')
+const {signup, login} = require('../crypto/salt');
+const { addHmac, getHmacs, checkHmac } = require('../crypto/hmac');
 const router = express.Router();
 
 function errCaught(res, err){
