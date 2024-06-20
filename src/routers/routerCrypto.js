@@ -92,7 +92,7 @@ router.post('/signup', express.urlencoded({ extended: true }), (req, res) => {
     }
     try {
         const user = signup(email, pass);
-        [status, response] = [200, {message: user}];
+        [status, response] = [200, {message: `Signed up with ${user.email}`}];
         respond(res, status, response);
     } catch (error) {
         errCaught(res, error);
