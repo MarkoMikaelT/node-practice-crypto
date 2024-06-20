@@ -1,7 +1,7 @@
 <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 <!-- have a button POST a click via AJAX -->
 
-<form hx-post="/v1/signup" hx-target="this">
+<form hx-post="/v1/signup" hx-target="#result-p" hx-swap="innerHTML">
   <div>
     <label>Password</label>
     <input type="text" name="password" value="Joe">

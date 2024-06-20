@@ -1,7 +1,6 @@
 <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 <!-- have a button POST a click via AJAX -->
-<form hx-get="/v1/login" hx-target="this">
-
+<form hx-get="/v1/login" hx-target="#result-p" hx-swap="innerHTML">
   <div class="form-group">
     <label>Email Address</label>
     <input type="email" name="email" value="joe@blow.com">

@@ -2,13 +2,15 @@ const express = require('express')
 const routerFront = express.Router();
 const fs = require('node:fs/promises')
 const header = './front/header.html'
+const callResult = './front/callResult.html'
 const signupPage = './front/signupPage.html'
 const loginPage = './front/loginPage.html'
 
 async function getPage(path){
     const head = await fs.readFile(header);
+    const result = await fs.readFile(callResult);
     const page = await fs.readFile(path);
-    return Buffer.concat([head, page])
+    return Buffer.concat([head, page, result])
 }
 
 routerFront.get('/', async (req, res) => {
